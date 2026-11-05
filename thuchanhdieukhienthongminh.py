@@ -13,8 +13,8 @@ st.title("⚙️ Hệ Thống Giám Sát & Bảo Trì Dự Đoán Thiết Bị")
 # HÀM GỬI CẢNH BÁO TELEGRAM (BƯỚC 6)
 # ==========================================
 # THAY THẾ BẰNG TOKEN VÀ CHAT ID CỦA BẠN
-TELEGRAM_BOT_TOKEN = "8406385450:AAG0-27oFeVcKy7QwEcxnHIbucdFdiEAYkk"
-TELEGRAM_CHAT_ID = "5142441716"
+TELEGRAM_BOT_TOKEN = st.secrets["TELEGRAM_BOT_TOKEN"]
+TELEGRAM_CHAT_ID = st.secrets["TELEGRAM_CHAT_ID"]
 
 def send_telegram_alert(machine_name, fault, action):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
@@ -149,7 +149,7 @@ import time
 current_time = time.time()
 
 # --- CẤU HÌNH THỜI GIAN ĐỘC LẬP ---
-AUTO_COOLDOWN = 600           # Gửi tự động: Cứ sau 60 giây gửi 1 lần
+AUTO_COOLDOWN = 6000           # Gửi tự động: Cứ sau 60 giây gửi 1 lần
 MANUAL_WINDOW = 300          # Chống spam thủ công: Xét trong khung 300 giây (5 phút)
 MAX_MANUAL_ALERTS = 5        # Chống spam thủ công: Tối đa 5 lần bấm trong MANUAL_WINDOW
 
