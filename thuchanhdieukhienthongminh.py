@@ -4,6 +4,38 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 import requests
+import paho.mqtt.client as mqtt
+import json
+import ssl
+import time
+
+# 1. Khởi tạo "kho chứa" dữ liệu trong Streamlit
+if 'sensor_data' not in st.session_state:
+    st.session_state.sensor_data = {"rpm": 0.0, "vibration": 0.0, "temperature": 0.0, "current": 0.0}
+
+# 2. Hàm kết nối và nhận dữ liệu
+@st.cache_resource
+def init_mqtt_subscriber():
+    def on_connect(client, userdata, flags, reason_code, properties=None):
+        if reason_code == 0:
+            client.subscribe("pdm/motor/sensor_data")
+            
+    def on_message(client, userdata, msg):
+        payload = json.loads(msg.payload.decode())
+        st.session_state.sensor_data = payload
+
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="Streamlit_Dashboard")
+    client.username_pw_set(st.secrets["MQTT_USERNAME"], st.secrets["MQTT_PASSWORD"])
+    client.tls_set(cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLS)
+    
+    client.on_connect = on_connect
+    client.on_message = on_message
+    
+    client.connect(st.secrets["MQTT_BROKER"], st.secrets["MQTT_PORT"])
+    client.loop_start() 
+    return client
+
+mqtt_client = init_mqtt_subscriber()
 
 # 1. CẤU HÌNH TRANG
 st.set_page_config(page_title="Dashboard Bảo Trì Dự Đoán", layout="wide")
@@ -331,3 +363,5 @@ with st.expander("📖 Bảng tra cứu hành động khắc phục tiêu chuẩ
         for k, v in FAULT_KNOWLEDGE_BASE.items()
     ])
     st.table(df_sop)
+time.sleep(1)
+st.rerun()    
