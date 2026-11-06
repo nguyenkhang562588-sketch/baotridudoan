@@ -174,6 +174,23 @@ curr_fault_desc = FAULT_KNOWLEDGE_BASE[curr_fault]["desc"]
 curr_action = FAULT_KNOWLEDGE_BASE[curr_fault]["action"]
 
 # ==========================================
+# 4 CHỈ SỐ TỔNG QUAN (ĐÃ ĐƯỢC TÍCH HỢP MQTT)
+# ==========================================
+latest_data = st.session_state.sensor_data
+
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.metric(label="Tốc độ Động cơ (RPM)", value=f"{latest_data.get('rpm', 0):.2f}")
+with col2:
+    st.metric(label="Độ rung (Vibration)", value=f"{latest_data.get('vibration', 0):.3f}")
+with col3:
+    st.metric(label="Nhiệt độ (Temperature)", value=f"{latest_data.get('temperature', 0):.1f} °C")
+with col4:
+    st.metric(label="Dòng điện (Current)", value=f"{latest_data.get('current', 0):.2f} A")
+
+st.markdown("---")
+
+# ==========================================
 # LÔ-GÍC CẢNH BÁO TELEGRAM (ĐỘC LẬP TỰ ĐỘNG & THỦ CÔNG)
 # ==========================================
 import time
