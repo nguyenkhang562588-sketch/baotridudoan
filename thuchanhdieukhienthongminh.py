@@ -84,7 +84,6 @@ FAULT_KNOWLEDGE_BASE = {
         "desc": "Kẹt cơ khí (Jamming)",
         "action": "DỪNG MÁY KHẨN CẤP. Kiểm tra dị vật kẹt trong hệ thống cơ khí, bơm mỡ bôi trơn."
     },
-    },
     "Imbalance": {
         "desc": "Mất cân bằng rotor / Lệch trục",
         "action": "Giảm tốc độ (RPM). Cần kiểm tra sự tích tụ bụi/rác trên cánh bơm, cân bằng động lại rotor."
