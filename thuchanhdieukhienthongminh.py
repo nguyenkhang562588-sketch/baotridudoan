@@ -68,9 +68,22 @@ def send_telegram_alert(machine_name, fault, action):
 # ==========================================
 # Đây là bảng chuẩn hóa mọi hành động tương ứng với từng loại lỗi (Khối 4 Poster)
 FAULT_KNOWLEDGE_BASE = {
-    "Normal": {
+    "NORMAL": {
         "desc": "Hoạt động bình thường",
         "action": "Duy trì theo dõi định kỳ. Không cần can thiệp."
+    },
+    "OVERLOAD": {
+        "desc": "Quá tải động cơ",
+        "action": "Giảm tải ngay lập tức. Kiểm tra hệ thống truyền động và băng tải."
+    },
+    "HIGH_VIBRATION": {
+        "desc": "Rung động bất thường",
+        "action": "Kiểm tra sự mất cân bằng, lệch trục hoặc lỏng chân đế. Siết lại bulong."
+    },
+    "JAM": {
+        "desc": "Kẹt cơ khí (Jamming)",
+        "action": "DỪNG MÁY KHẨN CẤP. Kiểm tra dị vật kẹt trong hệ thống cơ khí, bơm mỡ bôi trơn."
+    },
     },
     "Imbalance": {
         "desc": "Mất cân bằng rotor / Lệch trục",
