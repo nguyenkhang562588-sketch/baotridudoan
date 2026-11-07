@@ -176,13 +176,22 @@ st.sidebar.markdown("---")
 # ==========================================
 # LẤY THÔNG SỐ CỦA MÁY & KÍCH HOẠT TELEGRAM
 # ==========================================
+latest_data = st.session_state.sensor_data
 curr_data = machine_db[machine_selected]
 curr_health = curr_data["health"]
 curr_rul = curr_data["rul"]
-curr_fault = curr_data["fault"]
-curr_conf = curr_data["conf"]
-curr_status = xac_dinh_canh_bao(curr_rul, curr_health, curr_fault, curr_conf)
 
+# Máy Bơm 1 sẽ lấy chẩn đoán AI từ luồng MQTT
+if machine_selected == "Máy Bơm Số 1":
+    curr_fault = latest_data.get("ai_status", "NORMAL")
+    curr_conf = latest_data.get("ai_confidence", 1.0)
+    mqtt_vib = latest_data.get('vibration', 0.2) 
+else:
+    curr_fault = curr_data["fault"]
+    curr_conf = curr_data["conf"]
+    mqtt_vib = 0.2
+
+curr_status = xac_dinh_canh_bao(curr_rul, curr_health, curr_fault, curr_conf)
 curr_fault_desc = FAULT_KNOWLEDGE_BASE[curr_fault]["desc"]
 curr_action = FAULT_KNOWLEDGE_BASE[curr_fault]["action"]
 
@@ -374,11 +383,24 @@ with col_rul_list:
     # Lấy hành động tự động từ KNOWLEDGE BASE để điền vào bảng
     danh_sach_hanh_dong = [FAULT_KNOWLEDGE_BASE[l]["action"] for l in yolo_labels]
     
+        ai_labels = []
+    ai_confs = []
+    for m in machines:
+        if m == "Máy Bơm Số 1":
+            ai_labels.append(latest_data.get("ai_status", "NORMAL"))
+            ai_confs.append(latest_data.get("ai_confidence", 1.0))
+        else:
+            ai_labels.append(machine_db[m]["fault"])
+            ai_confs.append(machine_db[m]["conf"])
+    
+    danh_sach_canh_bao = [xac_dinh_canh_bao(r, h, l, c) for r, h, l, c in zip(ruls, healths, ai_labels, ai_confs)]
+    danh_sach_hanh_dong = [FAULT_KNOWLEDGE_BASE[l]["action"] for l in ai_labels]
+    
     fake_maintenance_list = pd.DataFrame({
         "Tên máy": machines,
         "Cảnh báo": danh_sach_canh_bao,
         "RUL (Ngày)": ruls,
-        "Lỗi YOLO": yolo_labels,
+        "Lỗi Phát Hiện": ai_labels,
         "Hành động": danh_sach_hanh_dong
     }).sort_values(by="RUL (Ngày)")
     
