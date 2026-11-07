@@ -9,11 +9,23 @@ import json
 import ssl
 import time
 
-# 1. Khởi tạo "kho chứa" dữ liệu trong Streamlit
-if 'sensor_data' not in st.session_state:
-    st.session_state.sensor_data = {"rpm": 0.0, "vibration": 0.0, "temperature": 0.0, "current": 0.0}
+# ==========================================
+# KHỞI TẠO VÀ NHẬN DỮ LIỆU MQTT
+# ==========================================
+# Dùng bộ đệm toàn cục (cache) để luồng ngầm MQTT có thể ghi dữ liệu
+@st.cache_resource
+def get_sensor_data_container():
+    return {
+        "rpm": 0.0, 
+        "vibration": 0.0, 
+        "temperature": 0.0, 
+        "current": 0.0,
+        "ai_status": "NORMAL",
+        "ai_confidence": 1.0
+    }
 
-# 2. Hàm kết nối và nhận dữ liệu
+shared_sensor_data = get_sensor_data_container()
+
 @st.cache_resource
 def init_mqtt_subscriber():
     def on_connect(client, userdata, flags, reason_code, properties=None):
@@ -21,8 +33,12 @@ def init_mqtt_subscriber():
             client.subscribe("pdm/motor/sensor_data")
             
     def on_message(client, userdata, msg):
-        payload = json.loads(msg.payload.decode())
-        st.session_state.sensor_data = payload
+        try:
+            payload = json.loads(msg.payload.decode())
+            # Cập nhật trực tiếp vào bộ đệm thay vì session_state
+            shared_sensor_data.update(payload)
+        except Exception as e:
+            pass # Bỏ qua nếu có lỗi format JSON
 
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="Streamlit_Dashboard")
     client.username_pw_set(st.secrets["MQTT_USERNAME"], st.secrets["MQTT_PASSWORD"])
