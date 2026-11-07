@@ -175,7 +175,7 @@ st.sidebar.markdown("---")
 # ==========================================
 # LẤY THÔNG SỐ CỦA MÁY & KÍCH HOẠT TELEGRAM
 # ==========================================
-latest_data = st.session_state.sensor_data
+latest_data = shared_sensor_data
 curr_data = machine_db[machine_selected]
 curr_health = curr_data["health"]
 curr_rul = curr_data["rul"]
@@ -197,7 +197,7 @@ curr_action = FAULT_KNOWLEDGE_BASE[curr_fault]["action"]
 # ==========================================
 # 4 CHỈ SỐ TỔNG QUAN (ĐÃ ĐƯỢC TÍCH HỢP MQTT)
 # ==========================================
-latest_data = st.session_state.sensor_data
+latest_data = shared_sensor_data
 
 col1, col2, col3, col4 = st.columns(4)
 
