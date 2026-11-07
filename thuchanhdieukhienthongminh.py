@@ -388,10 +388,7 @@ with col_rul_list:
     
     danh_sach_canh_bao = [xac_dinh_canh_bao(r, h, l, c) for r, h, l, c in zip(ruls, healths, yolo_labels, yolo_confs)]
     
-    # Lấy hành động tự động từ KNOWLEDGE BASE để điền vào bảng
-    danh_sach_hanh_dong = [FAULT_KNOWLEDGE_BASE[l]["action"] for l in yolo_labels]
-    
-        ai_labels = []
+    ai_labels = []
     ai_confs = []
     for m in machines:
         if m == "Máy Bơm Số 1":
