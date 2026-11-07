@@ -197,6 +197,9 @@ curr_health = curr_data["health"]
 curr_rul = curr_data["rul"]
 
 # Máy Bơm 1 sẽ lấy chẩn đoán AI từ luồng MQTT
+# Lấy dữ liệu mới nhất từ bộ đệm MQTT LÊN ĐẦU TIÊN
+latest_data = shared_sensor_data
+
 if machine_selected == "Máy Bơm Số 1":
     curr_fault = latest_data.get("ai_status", "NORMAL")
     curr_conf = latest_data.get("ai_confidence", 1.0)
@@ -207,13 +210,14 @@ else:
     mqtt_vib = 0.2
 
 curr_status = xac_dinh_canh_bao(curr_rul, curr_health, curr_fault, curr_conf)
-curr_fault_desc = FAULT_KNOWLEDGE_BASE[curr_fault]["desc"]
-curr_action = FAULT_KNOWLEDGE_BASE[curr_fault]["action"]
+
+# Sử dụng .get() an toàn cho từ điển
+curr_fault_desc = FAULT_KNOWLEDGE_BASE.get(curr_fault, {"desc": "Không xác định", "action": "Đang cập nhật..."})["desc"]
+curr_action = FAULT_KNOWLEDGE_BASE.get(curr_fault, {"desc": "Không xác định", "action": "Đang cập nhật..."})["action"]
 
 # ==========================================
 # 4 CHỈ SỐ TỔNG QUAN (ĐÃ ĐƯỢC TÍCH HỢP MQTT)
 # ==========================================
-latest_data = shared_sensor_data
 
 col1, col2, col3, col4 = st.columns(4)
 
