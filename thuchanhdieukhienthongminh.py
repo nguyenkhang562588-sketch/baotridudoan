@@ -158,10 +158,10 @@ def generate_fake_rul_data(curr_health):
     health = np.clip(health, 0, 100) 
     return pd.DataFrame({'Ngày vận hành': days, 'Chỉ số sức khỏe (%)': health})
 
-def xac_dinh_canh_bao(rul, health, yolo_label, yolo_conf):
-    if rul <= 15 or health <= 50 or (yolo_label != "Normal" and yolo_conf > 0.85):
+def xac_dinh_canh_bao(rul, health, ai_label, ai_conf):
+    if rul <= 15 or health <= 50 or (ai_label not in ["Normal", "NORMAL"] and ai_conf > 0.85):
         return "🔴 Đỏ (Nguy hiểm)"
-    elif rul <= 30 or health <= 80 or (yolo_label != "Normal" and yolo_conf <= 0.85):
+    elif rul <= 30 or health <= 80 or (ai_label not in ["Normal", "NORMAL"] and ai_conf <= 0.85):
         return "🟡 Vàng (Cảnh báo)"
     else:
         return "🟢 Xanh (Bình thường)"
