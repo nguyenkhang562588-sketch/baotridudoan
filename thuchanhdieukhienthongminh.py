@@ -292,15 +292,6 @@ elif "Xanh" in curr_status:
     st.session_state[auto_alert_key] = 0.0
     st.session_state[history_key] = []
 
-        
-# Nếu máy trở lại trạng thái XANH, reset lại bộ nhớ để sẵn sàng cho lần hỏng sau
-elif "Xanh" in curr_status:
-    st.session_state[alert_key] = False
-
-# Tự động tra cứu mô tả và hành động từ Bộ từ điển (Bước 5)
-curr_fault_desc = FAULT_KNOWLEDGE_BASE[curr_fault]["desc"]
-curr_action = FAULT_KNOWLEDGE_BASE[curr_fault]["action"]
-
 # ==========================================
 # 4 CHỈ SỐ TỔNG QUAN 
 # ==========================================
