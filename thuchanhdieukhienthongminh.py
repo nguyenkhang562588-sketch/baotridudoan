@@ -290,7 +290,7 @@ with col1:
 with col2:
     st.metric(label="RUL (Thời gian sống còn lại)", value=f"{curr_rul} Ngày", delta="-1 Ngày")
 with col3:
-    st.metric(label="Trạng thái chẩn đoán (YOLO)", value=curr_fault, delta=curr_status)
+    st.metric(label="Trạng thái chẩn đoán (AI)", value=curr_fault, delta=curr_status)
 with col4:
     st.metric(label="Độ tin cậy mô hình", value=f"{curr_conf * 100:.1f}%")
 
@@ -330,7 +330,7 @@ with c_diag:
     else:
         st.warning(f"⚠️ Nhận diện lỗi: **{curr_fault} ({curr_fault_desc})**")
         
-    st.write(f"**Độ tin cậy YOLOv8:** {curr_conf * 100:.1f}%")
+    st.write(f"**Độ tin cậy của mô hình AI:** {curr_conf * 100:.1f}%")
     st.progress(curr_conf)
     
     # Hiển thị hành động tự động từ từ điển (Bước 5)
@@ -419,7 +419,7 @@ with col_rul_list:
 # ==========================================
 with st.expander("📖 Bảng tra cứu hành động khắc phục tiêu chuẩn (SOP) đối với từng loại lỗi"):
     df_sop = pd.DataFrame([
-        {"Loại Lỗi (YOLO)": k, "Mô tả": v["desc"], "Quy trình xử lý (SOP)": v["action"]}
+        {"Loại Lỗi (AI)": k, "Mô tả": v["desc"], "Quy trình xử lý (SOP)": v["action"]}
         for k, v in FAULT_KNOWLEDGE_BASE.items()
     ])
     st.table(df_sop)
