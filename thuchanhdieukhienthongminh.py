@@ -399,7 +399,10 @@ with col_rul_list:
             ai_confs.append(machine_db[m]["conf"])
     
     danh_sach_canh_bao = [xac_dinh_canh_bao(r, h, l, c) for r, h, l, c in zip(ruls, healths, ai_labels, ai_confs)]
-    danh_sach_hanh_dong = [FAULT_KNOWLEDGE_BASE[l]["action"] for l in ai_labels]
+    danh_sach_hanh_dong = [
+    FAULT_KNOWLEDGE_BASE.get(l, {"action": "Đang phân tích dữ liệu..."})["action"] 
+    for l in ai_labels
+]
     
     fake_maintenance_list = pd.DataFrame({
         "Tên máy": machines,
